@@ -72,8 +72,14 @@ public class IceCreamCordovaWebViewClient extends AndroidWebViewClient {
     }
 
     private boolean isUrlHarmful(String url) {
-        return ((url.startsWith("http:") || url.startsWith("https:")) && !appView.getWhitelist().isUrlWhiteListed(url))
-            || url.contains("app_webview");
+        Boolean shouldAllowRequest = !appView.getPluginManager().shouldAllowRequest(url);
+        if (shouldAllowRequest == null || shouldAllowRequest == true) {
+            // This is the behaviour when all plugins return true, and is also the default behaviour
+            // if no plugins override shouldAllowRequest()
+            return ((url.startsWith("file://") || url.startsWith("data:")) && url.contains("app_webview"));
+        } else {
+            return true;
+        }
     }
 
     private static boolean needsKitKatContentUrlFix(Uri uri) {

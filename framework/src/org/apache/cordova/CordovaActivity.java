@@ -554,7 +554,13 @@ public class CordovaActivity extends Activity implements CordovaInterface {
 
         // If errorUrl specified, then load it
         final String errorUrl = preferences.getString("errorUrl", null);
-        if ((errorUrl != null) && (errorUrl.startsWith("file://") || internalWhitelist.isUrlWhiteListed(errorUrl)) && (!failingUrl.equals(errorUrl))) {
+        Boolean shouldAllowNavigation = (appView != null && appView.getPluginManager().shouldAllowNavigation(errorUrl));
+        if ((errorUrl != null) &&
+            (
+                errorUrl.startsWith("file://") ||
+                (shouldAllowNavigation != null && shouldAllowNavigation == true)
+            ) && (!failingUrl.equals(errorUrl))
+           ) {
             // Load URL on UI thread
             me.runOnUiThread(new Runnable() {
                 public void run() {
