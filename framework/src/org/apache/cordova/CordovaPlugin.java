@@ -162,19 +162,53 @@ public class CordovaPlugin {
      * Called when an activity you launched exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
      *
-     * @param requestCode		The request code originally supplied to startActivityForResult(),
-     * 							allowing you to identify who this result came from.
-     * @param resultCode		The integer result code returned by the child activity through its setResult().
-     * @param intent				An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     * @param requestCode   The request code originally supplied to startActivityForResult(),
+     *                      allowing you to identify who this result came from.
+     * @param resultCode    The integer result code returned by the child activity through its setResult().
+     * @param intent        An Intent, which can return result data to the caller (various data can be
+     *                      attached to Intent "extras").
      */
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     }
 
     /**
+     * Hook for blocking the loading of external resources.
+     *
+     * This will be called when the WebView's shouldInterceptRequest wants to know whether to
+     * open a connection to an external resource. Return false to block the request. Only if
+     * all plugins return true, then the request will proceed.
+     */
+    public Boolean shouldAllowRequest(String url) {
+        return true;
+    }
+
+    /**
+     * Hook for blocking navigation by the Cordova WebView
+     *
+     * This will be called when the WebView's needs to know whether to navigate to a new page.
+     * Return false to block the navigation. Only if all plugins return true, then the navigation
+     * will proceed.
+     */
+    public Boolean shouldAllowNavigation(String url) {
+        return null;
+    }
+
+    /**
+     * Hook for blocking the launching of Intents by the Cordova application
+     *
+     * This will be called when the WebView will not navigate to a page, but could launch an intent
+     * to handle the URL. Return false to block the navigation. Only if all plugins return true,
+     * then the URL be opened.
+     */
+    public Boolean shouldOpenExternalUrl(String url) {
+        return null;
+    }
+
+    /**
      * By specifying a <url-filter> in config.xml you can map a URL (using startsWith atm) to this method.
      *
-     * @param url				The URL that is trying to be loaded in the Cordova webview.
-     * @return					Return true to prevent the URL from loading. Default is false.
+     * @param url           The URL that is trying to be loaded in the Cordova webview.
+     * @return              Return true to prevent the URL from loading. Default is false.
      */
     public boolean onOverrideUrlLoading(String url) {
         return false;
